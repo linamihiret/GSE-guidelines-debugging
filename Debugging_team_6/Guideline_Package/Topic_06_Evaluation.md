@@ -112,12 +112,29 @@ A strong solution should not only fix the bug but also demonstrate a clear **Aut
 
 ---
 
-**Test Cases:**  
-- **Test Case 1:** [15, 25, 35] → 25.0  
-- **Test Case 2:** [5, 0, 10] → 5.0  
-- **Test Case 3 (Edge Case):** [] → Error or handled case (empty list or division by zero)  
-- **Test Case 4 (Edge Case):** [-1, -3, -5] → Error or handled case (no valid scores)  
-- **Test Case 5 (Edge Case):** [0, 0, 0] → 0.0 (all zeroes as valid inputs)
+### Prompts to Guide the Debugging Process:
+
+**Prompt 1:**  
+- **What is the issue with the current average calculation?**  
+  (Hint: Are negative values affecting the result? Is there any division by zero happening?)
+
+**Prompt 2:**  
+- **What should happen if the list contains only invalid values or is empty?**  
+  (Hint: Should the function return an error or handle this case gracefully?)
+
+**Prompt 3:**  
+- **What is the expected behavior when all values in the list are zero?**  
+  (Hint: How should the program calculate the average for a list of zeroes?)
+
+**Prompt 4:**  
+- **How will you experiment to verify that the issue is with counting negative values?**  
+  (Hint: Consider adding print statements to track the total and count values during the loop.)
+
+**Prompt 5:**  
+- **What will your hypothesis be for fixing the issue with counting negative values?**  
+  (Hint: What condition will you apply to only count valid, non-negative scores?)
+
+---
 
 ---
 
