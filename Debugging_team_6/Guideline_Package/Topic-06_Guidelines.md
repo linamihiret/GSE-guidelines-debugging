@@ -133,9 +133,112 @@ Kang, S., Chen, B., Yoo, S., & Lou, J.-G. (2025). *Explainable automated debuggi
 
 ---
 
-### Guideline N: `[Title]`
+### Guideline 4: `RepairAgent: Autonomous LLM-Based Program Repair`
 
-(Repeat the same structure for each guideline.)
+**Description:**  
+Developers should use LLM-based autonomous agents (e.g., RepairAgent) for debugging tasks that require more than a direct one-shot fix. Instead of only asking the LLM for code changes, the agent should follow a structured repair workflow.
+
+Specifically, developers should allow the agent to:
+
+1. Analyze failing tests, logs, or error messages  
+2. Read relevant source code files and methods  
+3. Generate a **hypothesis** about the bug location or cause  
+4. Search the codebase for similar logic or repair patterns  
+5. Suggest and apply a patch automatically  
+6. Run tests to validate the patch  
+7. Retry with new information until a correct fix is found  
+
+---
+
+**Reasoning:**  
+This guideline is based on the concept of **Autonomous Program Repair**, where the LLM behaves like a developer that investigates, tests, and repairs bugs step by step.
+
+- **Research literature:**  
+The RepairAgent approach shows that LLMs become more effective when they are allowed to use tools such as reading code, searching files, generating patches, and executing tests. Instead of relying on one prompt, the system continuously gathers information and improves its repair attempts. RepairAgent successfully fixed **164 real-world bugs**, including **39 bugs not solved by previous methods**.
+
+- **Why it works:**  
+  - Mimics how real developers debug (understand → search → fix → test → refine)  
+  - Uses external tools instead of relying only on memory  
+  - Reduces hallucinated fixes through testing and validation  
+  - Handles multi-line and more complex bugs better  
+  - Improves repair accuracy through multiple iterations  
+
+- **LLM experimentation insights:**  
+  In practice, directly asking for fixes often leads to:
+
+  - incomplete patches  
+  - wrong assumptions  
+  - missing project context  
+  - unverifiable code changes  
+
+  Using RepairAgent instead leads to:
+
+  - better bug understanding  
+  - more reliable fixes  
+  - automatic validation with tests  
+  - improved debugging workflow  
+
+---
+
+**Example:**  
+
+```python id="f40hk7"
+def divide(a, b):
+    return a / b
+
+### Step 1 – Bug Report:
+Program crashes when `b = 0`
+
+### Step 2 – Hypothesis (LLM Agent):
+The function has no protection against division by zero.
+
+### Step 3 – Search & Analyze:
+Agent reads function and checks failing tests.
+
+### Step 4 – Patch Generation:
+
+```python id="i5g0rz"
+def divide(a, b):
+    if b == 0:
+        return 0
+    return a / b
+
+
+### Step 5 – Validation:
+Run tests again.
+
+### Step 6 – Result:
+Tests pass successfully.
+
+### Step 7 – Completion:
+Correct patch found → `<DONE>`
+
+---
+
+## When to Apply:
+
+- When debugging medium or complex bugs  
+- When multiple files or functions are involved  
+- When failing tests are available  
+- When developers need automated bug fixing support  
+- When traditional prompting gives weak results  
+- In CI/CD or automated maintenance workflows  
+
+---
+
+## When to Avoid:
+
+- Very small syntax errors or trivial bugs  
+- Time-critical situations needing instant manual fixes  
+- Projects without tests or validation setup  
+- Safety-critical systems requiring manual approval only  
+- When debugging cost/token usage must stay minimal  
+
+---
+
+## Sources
+
+Bouzenia, I., Devanbu, P., & Pradel, M. (2025). *RepairAgent: An autonomous, LLM-based agent for program repair*. IEEE/ACM 47th International Conference on Software Engineering (ICSE). https://arxiv.org/pdf/2403.17134
 
 ---
 
