@@ -164,7 +164,7 @@ Output is correct → <DONE> / Yes, the debugging is complete.
 
 **Sources**
 
-Kang, S., Chen, B., Yoo, S., & Lou, J.-G. (2024). *Explainable automated debugging via large language model-driven scientific debugging*. Empirical Software Engineering, 30, 45. https://doi.org/10.1007/s10664-024-10594-x
+Kang, S., Chen, B., Yoo, S., & Lou, J.-G. (2025). *Explainable automated debugging via large language model-driven scientific debugging*. Empirical Software Engineering, 30, 45. https://doi.org/10.1007/s10664-024-10594-x
 
 ---
 
@@ -292,7 +292,7 @@ Bouzenia, I., Devanbu, P., & Pradel, M. (2025). *RepairAgent: An autonomous, LLM
 ---
 
 **Reading Assigned:**
-- Kang, S., Chen, B., Yoo, S., & Lou, J.-G. (2024). *Explainable automated debugging via large language model-driven scientific debugging*. Empirical Software Engineering, 30, 45. https://doi.org/10.1007/s10664-024-10594-x
+- Kang, S., Chen, B., Yoo, S., & Lou, J.-G. (2025). *Explainable automated debugging via large language model-driven scientific debugging*. Empirical Software Engineering, 30, 45. https://doi.org/10.1007/s10664-024-10594-x
 
 **Guideline 2: AutoSD: LLM-Driven Scientific Debugging**
 **Source:** Kang et al. (2025), Section 3 — "Automated Scientific Debugging (AutoSD)"
