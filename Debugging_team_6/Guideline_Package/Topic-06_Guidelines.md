@@ -326,26 +326,4 @@ Bouzenia, I., Devanbu, P., & Pradel, M. (2025). *RepairAgent: An autonomous, LLM
 
 ---
 
-## 3. References
-
-**Literature References:**
-[1] Chen, X., Lin, M., Schärli, N., & Zhou, D. (2024). Teaching Large Language Models to Self-Debug. *ICLR 2024*. https://arxiv.org/abs/2304.05128
-[2] Hunt, A., & Thomas, D. (2000). *The Pragmatic Programmer*. Addison-Wesley. (Rubber duck debugging origin)
-
-**Grey Literature References:**
-[1] GitHub Copilot documentation — "Using GitHub Copilot in your IDE": https://docs.github.com/en/copilot
-[2] Stack Overflow Developer Survey 2024 (AI tools section): https://survey.stackoverflow.co/2024/
-
-**LLM Prompts (Full Log):**
-See Appendix A (prompt logs available in team repository under `/docs/llm-logs/`).
-
----
-
-## 4. Appendix
-
-**A. Decision Matrix:** Guideline 1 (Explain-Then-Fix) was chosen over pure "just ask for a fix" because it is applicable even when no tests exist — which is the harder and more common real-world case. Guideline 2 (Execution Trace Feedback) was included because it dominates when tests *are* available, per the paper's quantitative results.
-
-
----
-
 *Template version: 1.0 | Topic: Debugging | Team 6 | Spring Semester 2026*
