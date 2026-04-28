@@ -9,11 +9,25 @@ A strong solution should not only fix the bug but also demonstrate a clear **Aut
 
 ---
 
-**Test Cases:**  
-- **Test Case 1:** [10, 20, 30] → 20.0  
-- **Test Case 2:** [10, -5, 15] → 12.5  
-- **Test Case 3 (Edge Case):** [-1, -2, -3] → Error or handled case (division by zero)  
-- **Test Case 4 (Edge Case):** [0, 0, 10] → 3.33 (or expected handling depending on logic)  
+**Prompts to Follow (AutoSD Workflow):**
+
+- **Prompt 1 (Hypothesis Generation):**  
+  `"Analyze the following function and propose a hypothesis explaining why it produces incorrect results when negative values are present. Do not provide a fix yet."`
+
+- **Prompt 2 (Prediction):**  
+  `"If your hypothesis is correct, what should we observe during execution? Explain what values (e.g., total, count) might look like."`
+
+- **Prompt 3 (Experiment Design):**  
+  `"Suggest a debugging experiment (e.g., print statements) to test this hypothesis. Show exactly what should be added to the code."`
+
+- **Prompt 4 (Observation & Analysis):**  
+  `"Given the following execution output, does it support or reject the hypothesis? Explain your reasoning."`
+
+- **Prompt 5 (Refinement / Iteration):**  
+  `"Based on the conclusion, propose the next hypothesis or confirm whether debugging is complete."`
+
+- **Prompt 6 (Completion Signal):**  
+  `"If you are confident the bug is fully understood and fixed, explicitly output <DONE>. Otherwise, continue debugging."` 
 
 ---
 
@@ -46,11 +60,26 @@ A strong solution should demonstrate the ability to identify **indexing-related 
 
 ---
 
-**Test Cases:**  
-- **Test Case 1:** [1, 1, 2, 2, 3] → [1, 2, 3]  
-- **Test Case 2:** [1, 1, 1, 1] → [1]  
-- **Test Case 3 (Edge Case):** [] → []  
-- **Test Case 4 (Edge Case):** [5] → [5]  
+**Prompts to Follow (AutoSD Workflow):**
+
+- **Prompt 1 (Hypothesis Generation):**  
+  `"Analyze the following function and propose a hypothesis explaining why it produces incorrect results. Focus on indexing and boundary conditions. Do not provide a fix yet."`
+
+- **Prompt 2 (Prediction):**  
+  `"If your hypothesis is correct, what should we observe during execution, especially at index 0? Explain expected values for nums[i] and nums[i-1]."`
+
+- **Prompt 3 (Experiment Design):**  
+  `"Suggest a debugging experiment (e.g., print index, current value, and previous value) to test this hypothesis. Show exactly what should be added to the code."`
+
+- **Prompt 4 (Observation & Analysis):**  
+  `"Given the execution output, does it support or reject the hypothesis? Explain why the behavior at index 0 is correct or incorrect."`
+
+- **Prompt 5 (Refinement / Iteration):**  
+  `"Based on the conclusion, propose the next hypothesis or confirm whether the issue is fully understood."`
+
+- **Prompt 6 (Completion Signal):**  
+  `"If you are confident the bug is fully understood and fixed, explicitly output <DONE>. Otherwise, continue debugging."`
+  
 
 ---
 
@@ -75,9 +104,6 @@ You can find the solution [here](./problems/02-deduplication/solution.py).
 - **Partial Deduplication:** Fix works only for specific inputs  
 
 ---
-
-
-
 
 ### Problem 03: Debugging Division by Zero in Average Calculation
 

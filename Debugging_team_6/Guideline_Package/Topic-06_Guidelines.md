@@ -7,7 +7,7 @@
 **Team Name:** `Debugging Team`  
 **Topic:** `Debugging`  
 **Date:** `28.04.2026`  
-**Authors:** `Mansi Sawant, Mihiret Ali `
+**Authors:** `Mansi Sawant, Mihiret Ali, Ting Huang, Hamid Ahmad`
 
 ---
 
@@ -164,7 +164,7 @@ Output is correct → <DONE> / Yes, the debugging is complete.
 
 **Sources**
 
-Kang, S., Chen, B., Yoo, S., & Lou, J.-G. (2025). *Explainable automated debugging via large language model-driven scientific debugging*. Empirical Software Engineering, 30, 45. https://doi.org/10.1007/s10664-024-10594-x
+Kang, S., Chen, B., Yoo, S., & Lou, J.-G. (2024). *Explainable automated debugging via large language model-driven scientific debugging*. Empirical Software Engineering, 30, 45. https://doi.org/10.1007/s10664-024-10594-x
 
 ---
 
@@ -217,12 +217,12 @@ The RepairAgent approach shows that LLMs become more effective when they are all
 
 **Example:**  
 
-```python id="f40hk7"
+python id="f40hk7"
 def divide(a, b):
     return a / b
 
 ### Step 1 – Bug Report:
-Program crashes when `b = 0`
+Program crashes when b = 0
 
 ### Step 2 – Hypothesis (LLM Agent):
 The function has no protection against division by zero.
@@ -232,7 +232,7 @@ Agent reads function and checks failing tests.
 
 ### Step 4 – Patch Generation:
 
-```python id="i5g0rz"
+python id="i5g0rz"
 def divide(a, b):
     if b == 0:
         return 0
@@ -246,11 +246,10 @@ Run tests again.
 Tests pass successfully.
 
 ### Step 7 – Completion:
-Correct patch found → `<DONE>`
+Correct patch found → <DONE>
 
----
 
-## When to Apply:
+**When to Apply:**
 
 - When debugging medium or complex bugs  
 - When multiple files or functions are involved  
@@ -284,13 +283,22 @@ Bouzenia, I., Devanbu, P., & Pradel, M. (2025). *RepairAgent: An autonomous, LLM
 **Reading Assigned:**
 - Chen, X., Lin, M., Schärli, N., & Zhou, D. (2024). *Teaching Large Language Models to Self-Debug*. ICLR 2024. https://arxiv.org/abs/2304.05128
 
----
-
 **Guideline 1: Rubber Duck Debugging via Code Explanation**
 **Source:** Chen et al. (2024), Section 3 — "Code Explanation feedback (Expl)"
 **Description:** Prompt the LLM to explain the generated code line-by-line in natural language *before* asking it to fix the code. The explanation forces the model to surface discrepancies between its implementation and the problem specification.
 **Reasoning:** The paper shows that code explanation alone (without unit tests) improves accuracy on Spider by 2–3% and by 9% on hardest queries. The authors note this mirrors human rubber duck debugging (Hunt & Thomas, 2000).
 **Example:** See Figure 3 in Chen et al. (2024) — the model explains an incorrect SQL clause and realises it used OR instead of INTERSECT.
+
+---
+
+**Reading Assigned:**
+- Kang, S., Chen, B., Yoo, S., & Lou, J.-G. (2024). *Explainable automated debugging via large language model-driven scientific debugging*. Empirical Software Engineering, 30, 45. https://doi.org/10.1007/s10664-024-10594-x
+
+**Guideline 2: AutoSD: LLM-Driven Scientific Debugging**
+**Source:** Kang et al. (2025), Section 3 — "Automated Scientific Debugging (AutoSD)"
+**Description:** Prompt the LLM to debug code by following a structured **Scientific Debugging loop**: generate a hypothesis about the bug, define a prediction, design an experiment (e.g., debugger commands or test execution), observe the results, and draw a conclusion. This loop should be repeated until the model determines that sufficient evidence has been gathered, indicated by a completion signal (e.g., `<DONE>`), after which a fix is generated.
+**Reasoning:** The paper argues that traditional automated debugging techniques and direct LLM fixes often lack explainability because their reasoning processes differ from how humans debug. AutoSD addresses this by explicitly emulating **Scientific Debugging**, where developers iteratively form and test hypotheses. By incorporating **real execution results** into the reasoning process, the approach reduces hallucination and produces explanations grounded in actual program behavior. Empirical results show that providing these reasoning traces helps developers **more accurately judge patch correctness** and improves trust in automated debugging tools.
+**Example:** See Figure 1 in Kang et al. (2025) — the model generates a hypothesis about a bug, executes a debugger command to inspect program state, observes unexpected values, and iteratively refines its reasoning before producing a fix along with an explanation of how the conclusion was reached.
 
 ---
 
@@ -308,11 +316,13 @@ Bouzenia, I., Devanbu, P., & Pradel, M. (2025). *RepairAgent: An autonomous, LLM
 **Models Used:**
 - Claude Sonnet 4.5 (Anthropic, 2025)
 - GitHub Copilot Chat (GPT-4o backbone, 2024)
+- ChatGPT (OpenAI, GPT-5, 2025)
 
 **Prompts Used:**
 1. `"What is the best way to prompt you to debug a Python function? Give me a prompt template."`
 2. `"I have a buggy function and no unit tests. Walk me through how to find the bug using only prompting strategies."`
 3. `"When does asking you to explain code before fixing it NOT help? Give counterexamples."`
+4. `"Analyze this buggy function and propose a hypothesis explaining the issue. Do not provide a fix yet."`
 
 ---
 

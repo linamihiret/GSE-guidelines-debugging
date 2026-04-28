@@ -1,5 +1,5 @@
 
-### Problem 01: Debugging Incorrect Average Calculation
+### Problem D_1: Debugging Incorrect Average Calculation
 
 **Task Description:**
 You are working with a small analytics function that calculates the average score from a list. However, users report that the result is incorrect when negative values appear in the input. The developer intended to ignore invalid (negative) scores, but something is wrong.
@@ -17,7 +17,7 @@ Hypothesis → Prediction → Experiment → Observation → Conclusion → <DON
 **Starter Artefacts:**  
 You can find the artifacts [here](./problems/01-debugging-average/calculate_average.py).
 
-**Guidelines 3 steps to Apply:**
+**Guidelines 2 steps to Apply:**
 
 **Step 01:** Clearly describe the bug scenario and expected behavior
 **Step 02:** Use the LLM to generate a hypothesis before asking for a fix
@@ -39,7 +39,7 @@ You can find the artifacts [here](./problems/01-debugging-average/calculate_aver
 
 --- 
 
-### Problem 02: Debugging List Deduplication Logic
+### Problem D_1: Debugging List Deduplication Logic
 
 **Task Description:**  
 A developer wrote a function to remove duplicate elements from a sorted list. However, the function produces incorrect results and sometimes includes duplicates.  
@@ -60,7 +60,7 @@ Follow the structured debugging loop:
 **Starter Artefacts:**  
 You can find the artifacts [here](./problems/02-deduplication/remove_duplicates.py).
 
-**Guidelines 3 steps to Apply:**
+**Guidelines 2 steps to Apply:**
 
 **Step 01:** Clearly describe the bug scenario and expected behavior
 **Step 02:** Use the LLM to generate a hypothesis before asking for a fix
