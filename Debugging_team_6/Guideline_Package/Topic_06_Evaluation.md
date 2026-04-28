@@ -170,7 +170,7 @@ Write two sentences: what the baseline attempt produced and what the guideline-d
 
 ### Step 1 — Run the Guideline 1 attempt (two turns)
 
-**Turn 1 — paste this exactly:**
+**Turn 1:**
 
 ```
 You are a careful Python code reviewer.
@@ -193,7 +193,7 @@ def running_average(numbers: list[float]) -> list[float]:
 
 Read the explanation carefully before continuing.
 
-**Turn 2 — paste this exactly:**
+**Turn 2 :**
 
 ```
 Based on your explanation above, provide a corrected version
