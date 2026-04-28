@@ -126,168 +126,124 @@ You can find the solution [here](./problems/03-average-calculation-debugging/sol
 
 ---
 
-**Evaluation Criteria: Guideline 2**  
-- **Root Cause Identification:** Correctly identifies that division by zero occurs when there are no valid (non-negative) scores.  
-- **Use of Experiments:** Includes meaningful debug steps (e.g., printing total and count of valid values).  
-- **Evidence-Based Reasoning:** Uses **test results** to support the fix, showing that the fix prevents division by zero errors.  
-- **Correct Fix:** Adds a check for `count == 0` and raises a **ValueError** when no valid scores are found.  
-- **Completion Signal:** Clearly indicates debugging completion using `<DONE>` or equivalent when the output matches expected results.
+*Guideline 1 Evaluation:** 
+
+**Step 1 — Did the model correctly locate the bug?**
+Read the explanation the model produced. It should name the exact variable, line, or logical condition that is wrong — not just say "there is an error." If it says something like `"the division on line 5 uses i instead of i+1, which causes a ZeroDivisionError when i = 0"` that is a good localisation. If it says `"the code has a problem with the loop"` without being specific, that is not.
+
+**Step 2 — Is the explanation accurate?**
+Compare the model's explanation to what you know the bug actually is. Does the explanation correctly describe the cause-and-effect chain? A wrong but confident explanation is worse than no explanation — it means the fix may be incorrect even if it looks plausible.
+
+**Step 3 — Did the prompt follow the right guideline?**
+For Guideline 1 (Explain-Then-Fix): check that there were two separate turns — an explanation turn first, then a fix turn. If the model jumped straight to a fix in turn 1 without explaining, the guideline was not applied.
+For Guideline 2 (Execution Trace): check that the exact error output from running the code was pasted verbatim into the prompt. If the error was paraphrased or summarised, the guideline was not applied correctly.
+
+**Step 4 — Does the fix pass all test cases?**
+Run the fixed code against the test cases listed for the problem. Every case must pass — not just the happy path. Pay particular attention to the edge cases (empty input, single element, value not found) because those are the ones the baseline attempt most often misses.
+
+**Step 5 — Is the fix minimal?**
+Count the lines changed. A good fix changes only what is necessary. If the model rewrote the entire function to fix a one-character bug, that is not a minimal fix and introduces unnecessary risk of new bugs. Prefer a fix that is a strict improvement over the original.
+
+**Step 6 — Compare baseline vs. guideline-driven.**
+Write two sentences: what the baseline attempt produced and what the guideline-driven attempt produced. Which one found the bug more precisely? Which fix was more correct on the first try? This comparison is what goes in your evidence log.
 
 ---
 
-**Common Mistakes to Avoid:**  
-- **Skipping Hypothesis Testing:** Not experimenting to identify the root cause of division by zero.  
-- **Incorrect Fix:** Applying a fix without thoroughly verifying it through multiple test cases.  
-- **No Edge Case Handling:** Failing to handle edge cases, such as **empty lists**, **lists with only negative values**, or **lists with all### General Evaluation Criteria
 
-These criteria apply to *any* debugging task in this topic, regardless of the specific problem.
 
-**Correctness**
-Does the fixed code produce the correct output for all provided test cases, including edge cases?
+### Step 1 — Run the Guideline 1 attempt (two turns)
 
-**Bug Localisation**
-Did the LLM (or the student guided by the LLM) correctly identify *where* the bug is, not just produce a fix that happens to work? A good debugging session includes a clear explanation of *why* the original code was wrong.
+**Turn 1 — paste this exactly:**
 
-**Explanation Quality**
-Is the code explanation accurate and specific? It should reference actual variable names, line numbers, and the logical discrepancy between implementation and spec — not vague statements like "the code has an error."
+```
+You are a careful Python code reviewer.
 
-**Guideline Adherence**
-- For Guideline 1 (Explain-Then-Fix): Was a two-turn prompt used? Did turn 1 produce an explanation *before* a fix was requested?
-- For Guideline 2 (Execution Trace): Was the full, unparaphrased execution output included in the prompt?
+Explain what the following function does, line by line.
+Then state whether it correctly implements this specification:
+"Returns a list where element i equals the average of
+numbers[0] through numbers[i] inclusive."
+Identify any discrepancy between the code and the spec,
+including any edge cases that would cause a crash.
 
-**Fix Quality**
-Is the fix minimal (changes only what is necessary)? Does it introduce any new bugs? Is it readable?
+def running_average(numbers: list[float]) -> list[float]:
+    result = []
+    total = 0
+    for i, n in enumerate(numbers):
+        total += n
+        result.append(total / i)
+    return result
+```
 
-**Edge Case Handling**
-Does the fix handle the edge cases that triggered the original bug, plus at least one additional boundary case?
+Read the explanation carefully before continuing.
 
----
+**Turn 2 — paste this exactly:**
 
-## 2. Evaluation Specifically for Example Problems
+```
+Based on your explanation above, provide a corrected version
+of the function. Change only what is necessary to fix the bug.
+```
 
-### Problem D_1: The Silent Average Bug
+### Step 2 — Check the explanation from Turn 1
 
-**Evaluation Description:**
-The correct fix must resolve *both* the ZeroDivisionError on empty/first-element input and the wrong denominator for all subsequent elements.
+Ask yourself these questions in order:
 
-**Test Cases:**
+Did the explanation mention that `enumerate` starts `i` at `0`? If not, it missed the root cause.
 
-| Input | Expected Output |
-|---|---|
-| `running_average([2, 4, 6])` | `[2.0, 3.0, 4.0]` |
-| `running_average([10])` | `[10.0]` |
-| `running_average([])` | `[]` (or raise ValueError — must be consistent with spec) |
-| `running_average([0, 0, 0])` | `[0.0, 0.0, 0.0]` |
+Did the explanation say that `total / i` will crash when `i = 0`? If not, it missed the most critical edge case.
 
-**Correct Solution:**
+Did the explanation say that even after the first element, `i` is still wrong because the count of elements seen is `i + 1`, not `i`? If not, it caught the crash but not the logic error.
+
+If the answer to all three is yes, the explanation is high quality. If only the first or second question is yes, the explanation is partial. If none are yes, the explanation failed and the guideline was not effective on this attempt — record that as a counterexample.
+
+### Step 3 — Check the fix from Turn 2
+
+Run the fixed code against these four inputs and confirm the outputs match:
+
+`running_average([2, 4, 6])` should return `[2.0, 3.0, 4.0]`
+
+`running_average([10])` should return `[10.0]`
+
+`running_average([])` should return `[]` — or raise a `ValueError` if the spec says so, but it must not crash silently
+
+`running_average([0, 0, 0])` should return `[0.0, 0.0, 0.0]`
+
+If all three pass, the fix is correct. If `running_average([10])` fails, the model fixed the wrong-denominator case but still crashes on a single element. If `running_average([2, 4, 6])` fails, the model may have just added an `if i == 0: continue` guard — which avoids the crash but produces wrong results for every other element.
+
+### Step 4 — Check fix minimality
+
+The only correct minimal fix is changing `total / i` to `total / (i + 1)`. If the model rewrote the loop with `range(len(numbers))` instead of `enumerate`, or added extra guard clauses, note it,  it works but is not minimal.
+
+### Step 5 — Common mistakes to watch for
+
+If the baseline produced a fix that passes `running_average([2, 4, 6])` but fails `running_average([10])`, record that as evidence that the baseline missed the edge case. This is the most common baseline failure on this problem.
+
+If the guideline-driven fix added `if not numbers: return []` as a separate guard rather than relying on the loop doing nothing on an empty list, that is acceptable — it is explicit and readable — but make a note that it is not the minimal change.
+
+### Correct reference solution
+
 ```python
 def running_average(numbers: list[float]) -> list[float]:
     result = []
     total = 0
     for i, n in enumerate(numbers):
         total += n
-        result.append(total / (i + 1))   # fix: i+1 is the count of elements seen
+        result.append(total / (i + 1))   # i+1 is the count of elements seen so far
     return result
 ```
 
-**Scoring Rubric for Explain-Then-Fix:**
+---
 
-| Criterion | Full marks | Partial | Zero |
-|---|---|---|---|
-| Turn 1 explanation identifies the `/ i` issue | Yes, explicitly | Mentions "division problem" vaguely | No mention |
-| Turn 1 explanation identifies ZeroDivisionError risk | Yes | Mentions only wrong result, not crash | No |
-| Turn 2 fix is correct for all test cases | All 4 pass | 2–3 pass | <2 pass |
-| Fix is minimal (only the denominator changes) | Yes | Yes but adds unnecessary code | Rewrites entire function |
 
-**Common Mistakes to Avoid:**
-- Fixing the crash but not the wrong-denominator logic (e.g., adding an `if i == 0: continue` guard instead of using `i + 1`).
-- Baseline prompt producing a "correct-looking" fix that passes the happy path but still fails on `running_average([5])` because `total / i` with `i = 0` was never tested.
-- Accepting a fix without running it against the edge-case tests.
+## 5. References
+
+[1] Chen, X., Lin, M., Schärli, N., & Zhou, D. (2024). Teaching Large Language Models to Self-Debug. *ICLR 2024*. https://arxiv.org/abs/2304.05128
 
 ---
 
-### Problem D_2: Off-by-One in Binary Search
+*Template version: 2.0 | Topic: Debugging | Team 6 | Spring Semester 2026*
 
-**Evaluation Description:**
-The correct fix must change `hi = len(arr)` to `hi = len(arr) - 1`. The fix must be validated against both the failing test and at least two additional inputs.
 
-**Test Cases:**
 
-| Input | Expected Output |
-|---|---|
-| `binary_search([1,3,5,7,9], 9)` | `4` |
-| `binary_search([1,3,5,7,9], 1)` | `0` |
-| `binary_search([1,3,5,7,9], 6)` | `-1` |
-| `binary_search([], 1)` | `-1` |
 
-**Correct Solution:**
-```python
-def binary_search(arr: list[int], target: int) -> int:
-    lo, hi = 0, len(arr) - 1    # fix: exclusive upper bound → inclusive
-    while lo <= hi:
-        mid = (lo + hi) // 2
-        if arr[mid] == target:
-            return mid
-        elif arr[mid] < target:
-            lo = mid + 1
-        else:
-            hi = mid - 1
-    return -1
-```
-
-**Scoring Rubric for Execution Trace Feedback:**
-
-| Criterion | Full marks | Partial | Zero |
-|---|---|---|---|
-| Prompt included verbatim execution output | Yes | Paraphrased it | Not included |
-| LLM explanation correctly links `IndexError` to `hi = len(arr)` | Yes | Mentions off-by-one generically | No |
-| Fix passes all 4 test cases above | Yes | 2–3 | <2 |
-| Student verified fix by running it | Yes | Says they did, unclear | No |
-
-**Common Mistakes to Avoid:**
-- Changing the loop condition to `lo < hi` instead of fixing the initial `hi` assignment — this changes the algorithm's semantics for single-element arrays.
-- Paraphrasing the error message in the prompt ("it gives an IndexError") instead of including the actual traceback — models perform better with the raw trace.
-- Not testing the empty array case after fixing.
-
----
-
-### Counterexample: Race Condition (Limitation Demo)
-
-**Evaluation Description:**
-The goal here is *not* to fix the code with the LLM, but to demonstrate that Guideline 1 (Explain-Then-Fix) fails to detect this class of bug.
-
-**Expected Observation:**
-- Baseline attempt (just ask LLM to fix): LLM likely says the code looks correct, or adds a lock without explaining why.
-- Guideline 1 attempt (explain first): LLM explains the code correctly at the static level but does **not** identify the race condition, because it cannot observe non-deterministic interleaving.
-- This is a valid and instructive **counterexample** — document it as such in your portfolio.
-
-**Correct Fix (for reference):**
-```python
-import threading
-
-counter = 0
-lock = threading.Lock()
-
-def increment():
-    global counter
-    for _ in range(100_000):
-        with lock:
-            counter += 1
-
-t1 = threading.Thread(target=increment)
-t2 = threading.Thread(target=increment)
-t1.start(); t2.start()
-t1.join(); t2.join()
-print(counter)  # reliably 200_000
-```
-
-**Guideline Refinement (document this in your portfolio):**
-> Guideline 1 (Explain-Then-Fix) works when the bug is statically detectable. It **fails** for concurrency bugs, I/O side effects, and non-deterministic failures. In these cases, switch to Guideline 2 with actual runtime evidence, or escalate to a human reviewer.
-
----
- zero values**.  
-- **Blind Trust in LLM Fixes:** Accepting fixes generated by AI without reasoning or validation.
-
----
 
 
