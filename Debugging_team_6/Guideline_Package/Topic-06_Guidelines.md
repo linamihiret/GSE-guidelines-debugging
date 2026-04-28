@@ -279,96 +279,63 @@ Bouzenia, I., Devanbu, P., & Pradel, M. (2025). *RepairAgent: An autonomous, LLM
 
 ## 2. Raw Guidelines (Source Documents)
 
-> **Note:** Include the original guidelines from each of the three sources before merging. This shows your curation process.
-
 ### 2.1 Guidelines from Literature Readings
 
-**Readings Assigned:**  
-- `[Primary reading 1]`  
-- `[Primary reading 2]`  
-- `[Additional required readings]`
+**Reading Assigned:**
+- Chen, X., Lin, M., Schärli, N., & Zhou, D. (2024). *Teaching Large Language Models to Self-Debug*. ICLR 2024. https://arxiv.org/abs/2304.05128
 
-**Extracted Guidelines:**  
-For each relevant guideline from readings:
+---
 
-**Guideline X.Y: [Title]**  
-**Source:** `[Citation]`  
-**Description:** `[What the reading says]`  
-**Reasoning:** `[Why the reading gives for this guideline]`  
-**Example:** `[Any example from the reading]`
+**Guideline 1: Rubber Duck Debugging via Code Explanation**
+**Source:** Chen et al. (2024), Section 3 — "Code Explanation feedback (Expl)"
+**Description:** Prompt the LLM to explain the generated code line-by-line in natural language *before* asking it to fix the code. The explanation forces the model to surface discrepancies between its implementation and the problem specification.
+**Reasoning:** The paper shows that code explanation alone (without unit tests) improves accuracy on Spider by 2–3% and by 9% on hardest queries. The authors note this mirrors human rubber duck debugging (Hunt & Thomas, 2000).
+**Example:** See Figure 3 in Chen et al. (2024) — the model explains an incorrect SQL clause and realises it used OR instead of INTERSECT.
 
 ---
 
 ### 2.2 Guidelines from Grey Literature / Practitioner Sources
 
-**Sources Explored:**  
-- `[Blog post 1]`  
-- `[Documentation 1]`  
-- `[Tool guide 1]`  
-- `[Community discussion 1]`
-
-**Extracted Guidelines:**  
-Format same as above.
+**Sources Explored:**
+- Simon Willison's blog: "AI-assisted debugging" (2024) — https://simonwillison.net
+- GitHub Copilot documentation: "Using Copilot Chat for debugging" — https://docs.github.com/copilot
+- Stack Overflow Blog: "How developers use AI for debugging" (2024)
 
 ---
 
 ### 2.3 Guidelines from LLM Experimentation
 
-**Models Used:**  
-- `[e.g., GPT-5.2, Claude 4.5 Sonnet, DeepSeek Coder, GitHub Copilot (Ask vs Agent etc.)]`
+**Models Used:**
+- Claude Sonnet 4.5 (Anthropic, 2025)
+- GitHub Copilot Chat (GPT-4o backbone, 2024)
 
-**Prompts Used:**  
-- `[Prompt 1]`  
-- `[Prompt 2]`  
-- `[Prompt 3]`
-
-**Extracted Guidelines:**  
-Format same as above.
+**Prompts Used:**
+1. `"What is the best way to prompt you to debug a Python function? Give me a prompt template."`
+2. `"I have a buggy function and no unit tests. Walk me through how to find the bug using only prompting strategies."`
+3. `"When does asking you to explain code before fixing it NOT help? Give counterexamples."`
 
 ---
 
 ## 3. References
 
-**Literature References:**  
-[1] `[Full citation]`  
-[2] `[Full citation]`  
+**Literature References:**
+[1] Chen, X., Lin, M., Schärli, N., & Zhou, D. (2024). Teaching Large Language Models to Self-Debug. *ICLR 2024*. https://arxiv.org/abs/2304.05128
+[2] Hunt, A., & Thomas, D. (2000). *The Pragmatic Programmer*. Addison-Wesley. (Rubber duck debugging origin)
 
-**Grey Literature References:**  
-[1] `[Blog post title and URL]`  
-[2] `[Documentation title and URL]`  
+**Grey Literature References:**
+[1] GitHub Copilot documentation — "Using GitHub Copilot in your IDE": https://docs.github.com/en/copilot
+[2] Stack Overflow Developer Survey 2024 (AI tools section): https://survey.stackoverflow.co/2024/
 
-**LLM Prompts (Full Log):**  
-See Appendix A or provide a link to a separate file with full prompt-response logs.
-
----
-
-## 4. Appendix (Optional)
-
-- **A. Full Prompt Logs:** Link to detailed LLM interaction logs
-- **B. Decision Matrix:** How you decided which guidelines to merge
-- **C. Conflicts Resolved:** Examples of contradictory guidelines and how you resolved them
+**LLM Prompts (Full Log):**
+See Appendix A (prompt logs available in team repository under `/docs/llm-logs/`).
 
 ---
 
-## Instructions for Use
+## 4. Appendix
 
-1. **Replace all `[...]` placeholders** with your team's specific content
-2. **Number guidelines consecutively** (Guideline 1, Guideline 2, etc.)
-3. **Cite sources properly** using academic citation style (e.g., APA, ACM)
-4. **Include concrete examples** - code or textual snippets (depending on SE task) are highly recommended
-5. **Be specific about applicability** - when does this guideline work vs. fail?
-6. **Submit as `Topic-XX_Guidelines.md`** where `XX` is your topic number
+**A. Decision Matrix:** Guideline 1 (Explain-Then-Fix) was chosen over pure "just ask for a fix" because it is applicable even when no tests exist — which is the harder and more common real-world case. Guideline 2 (Execution Trace Feedback) was included because it dominates when tests *are* available, per the paper's quantitative results.
+
 
 ---
 
-## Grading Criteria (for your reference)
-
-- ✅ **Clarity:** Guidelines are specific and actionable
-- ✅ **Evidence:** Each guideline is supported by reasoning and examples
-- ✅ **Curation:** Shows thoughtful merging of multiple sources
-- ✅ **Practicality:** Examples are relevant to real development tasks
-- ✅ **Transparency:** Raw guidelines from all three sources are included
-
----
-
-*Template version: 1.0 | Last updated: 24 February 2026*
+*Template version: 1.0 | Topic: Debugging | Team 6 | Spring Semester 2026*
