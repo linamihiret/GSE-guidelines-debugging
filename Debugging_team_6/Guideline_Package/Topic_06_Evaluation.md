@@ -77,11 +77,9 @@ You can find the solution [here](./problems/02-deduplication/solution.py).
 ---
 
 
-## 2. Evaluation Specifically for Example Problems
 
----
 
-### Problem 01: Debugging Division by Zero in Average Calculation
+### Problem 03: Debugging Division by Zero in Average Calculation
 
 **Evaluation Description:**  
 A strong solution should not only fix the bug but also demonstrate a clear **AutoSD reasoning process**. Special emphasis should be placed on correctly identifying the **root cause (division by zero)** and validating it using **execution-based evidence**.
