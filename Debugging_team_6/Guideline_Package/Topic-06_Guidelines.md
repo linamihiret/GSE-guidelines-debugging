@@ -7,37 +7,72 @@
 **Team Name:** `Debugging Team`  
 **Topic:** `Debugging`  
 **Date:** `28.04.2026`  
-**Authors:** `Mansi Sawant, `
+**Authors:** `Mansi Sawant, Mihiret Ali `
 
 ---
 
 ## 1. Unified Guidelines
 
-> **Note:** These are the merged, refined guidelines that your team recommends to the class. Each guideline should be actionable, specific, and usable during real SE/coding tasks.
+> **Note:** This unified guideline is designed for software engineers and teams utilizing LLMs and autonomous agents to resolve software defects. It encompasses Automated Program Repair, Rubber Duck Debugging via natural language explanation, and Agentic Execution Tracing. These practices are applicable across the development cycle—from rapid "vibe coding" prototypes to maintenance of legacy codebases, ensuring that fixes are verified through evidence-based feedback loops.
 
-### Guideline 1: `[Title]`
+### Guideline 1: `[Explain-Then-Fix (Rubber Duck Self-Debugging)]`
 
 **Description:**  
-What should developers do (i.e., state it clearly and concretely)?
+Before asking the LLM to fix a bug, first prompt it to *explain* the current code line-by-line in plain language and compare that explanation to the intended behaviour. Only after this explanation step should you prompt for a fix.
 
+Concretely, use a two-turn prompt sequence:
+1. **Explain turn:** Explain what this code does, line by line, and compare it to the following intended behaviour: <spec>.
+2. **Fix turn:** `"Based on your explanation, identify the bug and provide a corrected version.
+   
 **Reasoning:**  
-Explain *why* this guideline is important. Reference:
-- Relevant literature readings
-- Grey literature (blogs, documentation, etc.)
-- LLM experimentation insights
+Chen et al. (2024) show that large language models replicate *rubber duck debugging*: forcing a verbal walk-through of the code exposes logical mismatches that the model cannot detect when asked to fix blindly. On the Spider text-to-SQL benchmark (no unit tests available), adding the explanation step improved accuracy by 2–3% overall and by **9%** on the hardest queries. The intuition mirrors human practice: articulating *what the code does* surfaces the gap between implementation and intent without requiring external feedback.
+
 
 **Example:**  
-Provide a (simple) illustrative example (code snippet, pseudo-code, or description).
+```python
+# Buggy starter code
+def average(numbers):
+    return sum(numbers) / len(numbers)  # crashes on empty list
+
+# Step 1 – Explain turn prompt
+"""
+Explain what the following Python function does, line by line.
+Then state whether it correctly computes the average of a list of numbers
+for all possible inputs, including edge cases.
+
+def average(numbers):
+    return sum(numbers) / len(numbers)
+"""
+
+# Step 2 – Fix turn prompt (after model explanation reveals the ZeroDivisionError risk)
+"""
+Based on your explanation above, fix the function so it handles the empty list case.
+"""
+
+# Expected corrected output
+def average(numbers):
+    if not numbers:
+        return 0  # or raise ValueError – depends on spec
+    return sum(numbers) / len(numbers)
+```
 
 **When to Apply:**  
-Describe the conditions where this guideline is most effective.
+- The bug is logical (wrong output, wrong control flow) rather than a pure syntax error.
+- No unit tests are available to provide automatic pass/fail feedback.
+- The code is 5–50 lines — small enough for the model to explain coherently in one pass.
+- You are unsure *where* the bug is and want the model to localise it before fixing.
 
 **When to Avoid:**  
-Describe edge cases or situations where this guideline may not work well.
+- The function is very large (>100 lines): the explanation prompt becomes too long and the model loses focus. Split into smaller units first.
+- The bug requires runtime state (e.g., a race condition or file I/O side effect): static explanation is insufficient — use execution trace feedback instead (see Guideline 2).
+- The error message already pinpoints the line (e.g., a `NameError` with a clear traceback): jump straight to the fix; explanation adds little value.
 
+**Source**
+Chen, Xinyun, et al. "Teaching large language models to self-debug." arXiv preprint arXiv:2304.05128
+(2023). https://arxiv.org/pdf/2304.05128
 ---
 
-### Guideline 3: `AutoSD: LLM-Driven Scientific Debugging​`
+### Guideline 2: `AutoSD: LLM-Driven Scientific Debugging​`
 
 **Description:**  
 Developers should use LLMs (e.g., GitHub Copilot, ChatGPT) as **reasoning partners** by following a structured debugging process instead of asking for direct fixes.
@@ -133,7 +168,7 @@ Kang, S., Chen, B., Yoo, S., & Lou, J.-G. (2025). *Explainable automated debuggi
 
 ---
 
-### Guideline 4: `RepairAgent: Autonomous LLM-Based Program Repair`
+### Guideline 3: `RepairAgent: Autonomous LLM-Based Program Repair`
 
 **Description:**  
 Developers should use LLM-based autonomous agents (e.g., RepairAgent) for debugging tasks that require more than a direct one-shot fix. Instead of only asking the LLM for code changes, the agent should follow a structured repair workflow.
